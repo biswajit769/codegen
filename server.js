@@ -1,6 +1,7 @@
 const express = require('express')
 const multer = require('multer')
-const cors = require('cors')
+const cors = require('cors');
+const path = require('path');
 
 const app = express()
 
@@ -8,10 +9,10 @@ app.use(express.static('public'))
 
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/images/uploads')
+    cb(null, path.resolve(__dirname, './public/images/uploads'))
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname)
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 })
 
