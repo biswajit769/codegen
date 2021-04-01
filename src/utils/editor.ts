@@ -70,6 +70,23 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'ListMeta',
   'InputGroupMeta',
   'BreadcrumbMeta',
+  'Popover',
+  'PopoverTrigger',
+  'PopoverContent',
+  'PopoverHeader',
+  'PopoverBody',
+  'PopoverArrow',
+  'PopoverCloseButton',
+  'PopoverFooter',
+  'PopoverMeta',
+  'Modal',
+  'ModalOverlay',
+  'ModalContent',
+  'ModalHeader',
+  'ModalFooter',
+  'ModalBody',
+  'ModalCloseButton',
+  'ModalMeta'
 ]
 
 export const AccordionWhitelist: (

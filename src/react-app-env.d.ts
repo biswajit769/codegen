@@ -69,6 +69,21 @@ type ComponentType =
   | 'Tag'
   | 'Text'
   | 'Textarea'
+  | 'Popover'
+  | 'PopoverTrigger'
+  | 'PopoverContent'
+  | 'PopoverHeader'
+  | 'PopoverBody'
+  | 'PopoverArrow'
+  | 'PopoverCloseButton'
+  | 'PopoverFooter'
+  | 'Modal'
+  | 'ModalOverlay'
+  | 'ModalContent'
+  | 'ModalHeader'
+  | 'ModalFooter'
+  | 'ModalBody'
+  | 'ModalCloseButton'
 
 type MetaComponentType =
   | 'FormControlMeta'
@@ -77,6 +92,8 @@ type MetaComponentType =
   | 'AlertMeta'
   | 'InputGroupMeta'
   | 'BreadcrumbMeta'
+  | 'PopoverMeta'
+  | 'ModalMeta'
 
 interface IComponent {
   children: string[]

@@ -27,6 +27,56 @@ export const buildAlert = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildPopover = (parent: string): ComposedComponent => {
+  const composer = new Composer('Popover')
+  const nodeId = composer.addNode({ type: 'Popover' })
+  const tiggerId = composer.addNode({ type: 'PopoverTrigger', parent: nodeId })
+  composer.addNode({ type: 'Button', parent: tiggerId })
+  const contentId = composer.addNode({ type: 'PopoverContent', parent: nodeId })
+  composer.addNode({ type: 'PopoverCloseButton', parent: contentId })
+  composer.addNode({
+    type: 'PopoverHeader',
+    parent: contentId,
+  })
+  composer.addNode({ type: 'PopoverBody', parent: contentId })
+  composer.addNode({ type: 'PopoverFooter', parent: contentId })
+  const components = composer.getComponents()
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
+export const buildModal = (parent: string): ComposedComponent => {
+  const composer = new Composer('Modal')
+  const nodeId = composer.addNode({ type: 'Modal' })
+  //const tiggerId = composer.addNode({ type: 'ModalOverlay', parent: nodeId })
+  //composer.addNode({ type: 'Button', parent: tiggerId })
+  const contentId = composer.addNode({ type: 'ModalContent', parent: nodeId })
+  composer.addNode({ type: 'ModalCloseButton', parent: contentId })
+  composer.addNode({
+    type: 'ModalHeader',
+    parent: contentId,
+  })
+  composer.addNode({ type: 'ModalBody', parent: contentId })
+
+  const footerId = composer.addNode({
+    type: 'ModalFooter',
+    parent: contentId,
+  })
+  composer.addNode({ type: 'Button', parent: footerId })
+  composer.addNode({ type: 'Button', parent: footerId })
+  const components = composer.getComponents()
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
+
+
 export const buildBreadcrumb = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
@@ -147,6 +197,8 @@ const builders: ComposerBuilders = {
   ListMeta: buildList,
   InputGroupMeta: buildInputGroup,
   BreadcrumbMeta: buildBreadcrumb,
+  PopoverMeta: buildPopover,
+  ModalMeta:buildModal
 }
 
 export default builders

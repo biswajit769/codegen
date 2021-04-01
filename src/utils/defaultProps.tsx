@@ -58,6 +58,22 @@ import {
   TabProps,
   BreadcrumbLinkProps,
   ListProps,
+  Popover,
+  PopoverArrow,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverFooter,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
 } from '@chakra-ui/react'
 
 import { ChevronDownIcon } from '@chakra-ui/icons'
@@ -131,6 +147,23 @@ type PreviewDefaultProps = {
   ListItem?: PropsWithForm<any>
   Center?: PropsWithForm<CenterProps>
   Container?: PropsWithForm<ContainerProps>
+  Popover?: any
+  PopoverTrigger?: any
+  PopoverContent?: any
+  PopoverHeader?: any
+  PopoverBody?: any
+  PopoverArrow?: any
+  PopoverCloseButton?: any
+  PopoverFooter?: any
+  PopoverMeta?: any
+  Modal?: any
+  ModalOverlay?: any
+  ModalContent?: any
+  ModalHeader?: any
+  ModalFooter?: any
+  ModalBody?: any
+  ModalCloseButton?: any
+  ModalMeta?: any
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -276,6 +309,64 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: 'Tag name',
   },
   Text: { children: 'Text value' },
+  Popover: {
+    ...Popover.defaultProps,
+    isOpen: true,
+  },
+  PopoverTrigger: {
+    ...PopoverTrigger.defaultProps,
+  },
+  PopoverContent: {
+    ...PopoverContent.defaultProps,
+    zIndex: 4,
+  },
+  PopoverHeader: {
+    ...PopoverHeader.defaultProps,
+    children: 'Popover Header',
+  },
+  PopoverBody: {
+    ...PopoverBody.defaultProps,
+    children: 'Popover Body',
+  },
+  PopoverArrow: {
+    ...PopoverArrow.defaultProps,
+  },
+  PopoverCloseButton: {
+    ...PopoverCloseButton.defaultProps,
+  },
+  PopoverFooter: {
+    ...PopoverFooter.defaultProps,
+    children: 'Popover Footer',
+  },
+  Modal: {
+    ...Modal.defaultProps,
+    isOpen: false,
+    closeOnOverlayClick : true,
+    closeOnEsc : true
+  },
+  ModalOverlay: {
+    ...ModalOverlay.defaultProps,
+  },
+  ModalContent: {
+    ...ModalContent.defaultProps,
+    scrollBehavior: 'inside',
+    zIndex: 50,
+  },
+  ModalHeader: {
+    ...ModalHeader.defaultProps,
+    children: 'Modal Header',
+  },
+  ModalBody: {
+    ...ModalBody.defaultProps,
+    children: 'Modal Body',
+  },
+  ModalCloseButton: {
+    ...ModalCloseButton.defaultProps,
+  },
+  ModalFooter: {
+    ...ModalFooter.defaultProps,
+    children: 'Modal Footer',
+  },
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {

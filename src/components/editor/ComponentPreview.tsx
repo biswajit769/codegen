@@ -11,6 +11,12 @@ import AccordionPreview, {
   AccordionItemPreview,
   AccordionPanelPreview,
 } from '~components/editor/previews/AccordionPreview'
+import PopoverTriggerPreview, {
+  PopoverContentPreview,
+} from './previews/PopoverTriggerPreview'
+import ModalOverlayPreview, {
+  ModalContentPreview,
+} from './previews/ModalTriggerPreview'
 import * as Chakra from '@chakra-ui/react'
 import { getComponentBy } from '~core/selectors/components'
 import { InputRightElementPreview } from '~components/editor/previews/InputRightElement'
@@ -23,6 +29,8 @@ import IconPreview from './previews/IconPreview'
 import IconButtonPreview from './previews/IconButtonPreview'
 import SelectPreview from '~components/editor/previews/SelectPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
+import PopoverPreview from './previews/PopoverTriggerPreview'
+import ModalPreview from './previews/ModalTriggerPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -64,6 +72,30 @@ const ComponentPreview: React.FC<{
       )
     // Wrapped functional components (forward ref issue)
     case 'AlertIcon':
+    case 'Select':
+    case 'PopoverBody':
+    case 'PopoverFooter':
+    case 'PopoverHeader':
+    case 'PopoverArrow':
+    case 'PopoverCloseButton':
+    return (
+      <PreviewContainer
+        component={component}
+        type={Chakra[type]}
+        {...forwardedProps}
+      />
+    )
+    case 'ModalHeader':
+    case 'ModalFooter':
+    case 'ModalBody':
+    case 'ModalCloseButton':
+    return (
+      <PreviewContainer
+        component={component}
+        type={Chakra[type]}
+        {...forwardedProps}
+      />
+    )
     case 'Progress':
     case 'CloseButton':
     case 'AccordionIcon':
@@ -150,6 +182,18 @@ const ComponentPreview: React.FC<{
       return <SelectPreview component={component} />
     case 'NumberInput':
       return <NumberInputPreview component={component} />
+    case 'PopoverTrigger':
+      return <PopoverTriggerPreview component={component} />
+    case 'Popover':
+      return <PopoverPreview component={component} />
+    case 'PopoverContent':
+      return <PopoverContentPreview component={component} />
+    case 'Modal':
+      return <ModalPreview component={component} />
+    case 'ModalContent':
+      return <ModalContentPreview component={component} />
+    case 'ModalOverlay':
+      return <ModalOverlayPreview component={component} />
     default:
       return null
   }
