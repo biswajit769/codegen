@@ -22,13 +22,17 @@ export const useForm = () => {
         //console.log("test upload=====",response);
         //this.setState({imageUrl: [response.data.imageUrls, ...this.state.imageUrls]});
         if (response && response.data && response.data.imageUrl) {
-          //setValue('src', `${location.protocol}//${location.host}/` + response.data.imageUrl)
+          setValue(
+            'src',
+            `${window.location.protocol}//${window.location.host}/` +
+              response.data.imageUrl,
+          )
         }
       })
       //const formData = new FormData();
       //formData.append("image", fileSelected, fileSelected.name);
     }
-  }, [fileSelected])
+  }, [fileSelected, setValue])
 
   const setValueFromEvent = ({
     target: { name, value },
