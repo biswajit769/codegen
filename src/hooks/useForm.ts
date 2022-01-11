@@ -22,7 +22,7 @@ export const useForm = () => {
         //console.log("test upload=====",response);
         //this.setState({imageUrl: [response.data.imageUrls, ...this.state.imageUrls]});
         if (response && response.data && response.data.imageUrl) {
-          setValue('src', `${location.protocol}//${location.host}/` + response.data.imageUrl)
+          //setValue('src', `${location.protocol}//${location.host}/` + response.data.imageUrl)
         }
       })
       //const formData = new FormData();

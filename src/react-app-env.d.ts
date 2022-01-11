@@ -2,6 +2,7 @@
 declare module 'prettier/standalone'
 declare module 'coloreact'
 declare module 'browser-nativefs'
+declare module 'react-json-tree'
 
 type ComponentType =
   | 'Accordion'

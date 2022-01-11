@@ -1,5 +1,7 @@
 import React from 'react'
 import * as Chakra from '@chakra-ui/react'
+import { getCustomTheme } from '~core/selectors/app'
+import { useSelector } from 'react-redux'
 
 import {
   BadgeProps,
@@ -73,7 +75,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react'
 
 import { ChevronDownIcon } from '@chakra-ui/icons'
@@ -190,7 +192,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   Badge: {
     children: 'Badge name',
-    variant: 'subtle',
+    variant: 'solid',
   },
   Breadcrumb: {
     form: {
@@ -204,6 +206,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: 'Button text',
     variant: 'solid',
     size: 'md',
+    colorScheme: 'blackAlpha',
   },
   Checkbox: {
     children: 'Label checkbox',
@@ -341,8 +344,8 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Modal: {
     ...Modal.defaultProps,
     isOpen: false,
-    closeOnOverlayClick : true,
-    closeOnEsc : true
+    closeOnOverlayClick: true,
+    closeOnEsc: true,
   },
   ModalOverlay: {
     ...ModalOverlay.defaultProps,

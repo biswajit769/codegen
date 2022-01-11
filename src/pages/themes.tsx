@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Box } from '@chakra-ui/react'
+import { Flex, Box, useTheme, ThemeProvider } from '@chakra-ui/react'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 import { Global } from '@emotion/react'
@@ -11,10 +11,20 @@ import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary
 import Editor from '~components/editor/Editor'
 import { InspectorProvider } from '~contexts/inspector-context'
 import Inspector from '~components/inspector/Inspector'
+import { getCustomTheme } from '~core/selectors/app'
+import { useSelector } from 'react-redux'
 
 const Themes = () => {
   useShortcuts()
+  const theme = useTheme()
+  const customTheme = useSelector(getCustomTheme)
+  console.log('get custom theme1', customTheme)
 
+  const customThemeContainer = {
+    ...theme,
+    ...(customTheme as {}),
+  }
+  console.log('custom theme container===', customThemeContainer)
   return (
     <>
       <Global
@@ -27,11 +37,14 @@ const Themes = () => {
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
+
+          {/* <ThemeProvider theme={customThemeContainer}> */}
           <EditorErrorBoundary>
             <Box bg="white" flex={1} position="relative">
               <Editor />
             </Box>
           </EditorErrorBoundary>
+          {/* </ThemeProvider>  */}
 
           <Box
             maxH="calc(100vh - 3rem)"

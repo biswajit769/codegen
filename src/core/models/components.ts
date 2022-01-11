@@ -50,6 +50,7 @@ const components = createModel({
       }
     },
     resetProps(state: ComponentsState, componentId: string): ComponentsState {
+      console.log('this part1 has been called')
       return produce(state, (draftState: ComponentsState) => {
         const component = draftState.components[componentId]
         const { form, ...defaultProps } = DEFAULT_PROPS[component.type] || {}
@@ -153,11 +154,33 @@ const components = createModel({
         type: ComponentType
         rootParentType?: ComponentType
         testId?: string
+        uploadedTheme: any
       },
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
+        let customThemeContainer = ''
+        /*const customThemeContainer = {
+          ...DEFAULT_PROPS,
+          //...(payload.uploadedTheme as {}),
+          ...(JSON.parse(JSON.parse(localStorage.getItem('customTheme') || '{}')) as {}),
+        }*/
+        if (localStorage.getItem('customTheme')) {
+          customThemeContainer = {
+            ...DEFAULT_PROPS,
+            //...(payload.uploadedTheme as {}),
+            ...(JSON.parse(
+              JSON.parse(localStorage.getItem('customTheme') || '{}'),
+            ) as {}),
+          }
+        } else {
+          customThemeContainer = {
+            ...DEFAULT_PROPS,
+          }
+        }
+        console.log('This part2 has been', customThemeContainer)
         const id = payload.testId || generateId()
-        const { form, ...defaultProps } = DEFAULT_PROPS[payload.type] || {}
+        const { form, ...defaultProps } =
+          customThemeContainer[payload.type] || {}
         draftState.selectedId = id
         draftState.components[payload.parentName].children.push(id)
         draftState.components[id] = {

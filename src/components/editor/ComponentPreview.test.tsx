@@ -81,13 +81,14 @@ const componentsToTest = [
   'Select',
   'InputGroup',
   'PopoverMeta',
-  'ModalMeta'
+  'ModalMeta',
 ]
 
 test.each(componentsToTest)('Component Preview for %s', componentName => {
   // const spy = jest.spyOn(global.console, 'error')
   // @ts-ignore
   const store = init(storeConfig)
+  console.log('this component part has been executed12')
   store.dispatch.components.addComponent({
     parentName: 'root',
     type: componentName,

@@ -19,9 +19,28 @@ import {
   LightMode,
   PopoverFooter,
   Tooltip,
-  HStack,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Input,
+  ModalHeader,
+  useTheme,
 } from '@chakra-ui/react'
-import { ExternalLinkIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
+import {
+  ExternalLinkIcon,
+  SmallCloseIcon,
+  CheckIcon,
+  RepeatIcon,
+} from '@chakra-ui/icons'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
 import { buildParameters } from '~utils/codesandbox'
@@ -29,8 +48,32 @@ import { generateCode } from '~utils/code'
 import useDispatch from '~hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
-import { getShowLayout, getShowCode } from '~core/selectors/app'
-import HeaderMenu from '~components/headerMenu/HeaderMenu'
+import { getShowLayout, getShowCode, getCustomTheme } from '~core/selectors/app'
+import { FaRegSave, FaBomb, FaEdit } from 'react-icons/fa'
+import { GoRepo } from 'react-icons/go'
+import { FiUpload } from 'react-icons/fi'
+import JSONTree from 'react-json-tree'
+
+export const jsonTheme = {
+  scheme: 'google',
+  author: 'seth wright (http://sethawright.com)',
+  base00: '#000',
+  base01: '#282a2e',
+  base02: '#373b41',
+  base03: '#969896',
+  base04: '#b4b7b4',
+  base05: '#c5c8c6',
+  base06: '#e0e0e0',
+  base07: '#ffffff',
+  base08: '#CC342B',
+  base09: '#F96A38',
+  base0A: '#FBA922',
+  base0B: '#198844',
+  base0C: '#3971ED',
+  base0D: '#3971ED',
+  base0E: '#A36AC7',
+  base0F: '#3971ED',
+}
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -67,16 +110,75 @@ const CodeSandboxButton = () => {
   )
 }
 
+const ClearCustomThemeButton = () => {
+  const components = useSelector(getComponents)
+  const [isLoading, setIsLoading] = useState(false)
+  console.log('local storage type====', typeof localStorage)
+  if (typeof window !== 'undefined' && localStorage.getItem('customTheme')) {
+    return (
+      <Tooltip
+        zIndex={100}
+        hasArrow
+        bg="yellow.100"
+        aria-label="Builder mode help"
+        label="Clear Imported Theme"
+      >
+        <Button
+          onClick={() => {
+            localStorage.clear()
+            window.location.reload()
+          }}
+          rightIcon={<RepeatIcon path="" />}
+          variant="ghost"
+          size="xs"
+        >
+          Clear Custom Theme
+        </Button>
+      </Tooltip>
+    )
+  } else {
+    return null
+  }
+}
+
 const Header = () => {
   const showLayout = useSelector(getShowLayout)
+  useSelector(getCustomTheme)
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [fileLoaded, setFileLoaded] = useState(false)
+  const [fileError, setFileError] = useState(false)
+  const theme = useTheme()
+
+  console.log('current_theme====', theme)
+
+  const handleChange = async (selectorFiles: any) => {
+    selectorFiles.preventDefault()
+    const reader = new FileReader()
+    reader.onload = async e => {
+      if (e.target!.result) {
+        const text = e.target!.result
+        // @ts-ignore
+        dispatch.app.getCustomTheme(JSON.parse(text))
+        console.log(
+          'stringify object is====',
+          JSON.stringify(text).replace(/(?:\\[rn])+/g, ''),
+        )
+        localStorage.setItem('customTheme', JSON.stringify(text))
+        setFileLoaded(true)
+      } else {
+        setFileError(true)
+      }
+    }
+    reader.readAsText(selectorFiles.target.files[0])
+  }
 
   return (
     <DarkMode>
       <Flex
         justifyContent="space-between"
-        bg="#0866c6"
+        bg="#1a202c"
         as="header"
         height="3rem"
         px="1rem"
@@ -84,7 +186,7 @@ const Header = () => {
         <Flex
           width="14rem"
           height="100%"
-          backgroundColor="#0866c6"
+          backgroundColor="#1a202c"
           color="white"
           as="a"
           fontSize="xl"
@@ -96,11 +198,33 @@ const Header = () => {
         </Flex>
 
         <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
-          <HStack spacing={4} justify="center" align="center">
+          <Stack isInline spacing={4} justify="center" align="center">
             <Box>
-              <HeaderMenu />
+              <Menu>
+                <MenuButton>
+                  <Button size="xs" variant="ghost" variantColor="gray">
+                    Editor
+                  </Button>
+                </MenuButton>
+                <LightMode>
+                  <MenuList zIndex={100}>
+                    <MenuItem>
+                      <Box mr={2} as={FaRegSave} />
+                      Save components
+                    </MenuItem>
+                    <MenuItem>
+                      <Box mr={2} as={FiUpload} />
+                      Import components
+                    </MenuItem>
+                    <MenuItem onClick={onOpen}>
+                      <Box mr={2} as={FaEdit} />
+                      Edit theme
+                    </MenuItem>
+                  </MenuList>
+                </LightMode>
+              </Menu>
             </Box>
-            <FormControl flexDirection="row" display="flex" alignItems="center">
+            <FormControl>
               <Tooltip
                 zIndex={100}
                 hasArrow
@@ -114,65 +238,47 @@ const Header = () => {
                   fontSize="xs"
                   htmlFor="preview"
                   pb={0}
-                  mb={0}
-                  mr={2}
-                  whiteSpace="nowrap"
                 >
                   Builder mode
                 </FormLabel>
               </Tooltip>
-              <LightMode>
-                <Switch
-                  isChecked={showLayout}
-                  colorScheme="teal"
-                  size="sm"
-                  onChange={() => dispatch.app.toggleBuilderMode()}
-                  id="preview"
-                />
-              </LightMode>
+              <Switch
+                isChecked={showLayout}
+                color="teal"
+                size="sm"
+                onChange={() => dispatch.app.toggleBuilderMode()}
+                id="preview"
+              />
             </FormControl>
 
-            <FormControl display="flex" flexDirection="row" alignItems="center">
-              <FormLabel
-                color="gray.200"
-                fontSize="xs"
-                mr={2}
-                mb={0}
-                htmlFor="code"
-                pb={0}
-                whiteSpace="nowrap"
-              >
+            <FormControl>
+              <FormLabel color="gray.200" fontSize="xs" htmlFor="code" pb={0}>
                 Code panel
               </FormLabel>
-              <LightMode>
-                <Switch
-                  isChecked={showCode}
-                  id="code"
-                  colorScheme="teal"
-                  onChange={() => dispatch.app.toggleCodePanel()}
-                  size="sm"
-                />
-              </LightMode>
+              <Switch
+                isChecked={showCode}
+                id="code"
+                color="teal"
+                onChange={() => dispatch.app.toggleCodePanel()}
+                size="sm"
+              />
             </FormControl>
-          </HStack>
+          </Stack>
 
-          <Stack direction="row">
+          <Stack isInline>
             <CodeSandboxButton />
+            <ClearCustomThemeButton />
+
             <Popover>
               {({ onClose }) => (
                 <>
                   <PopoverTrigger>
-                    <Button
-                      ml={4}
-                      rightIcon={<SmallCloseIcon path="" />}
-                      size="xs"
-                      variant="ghost"
-                    >
+                    <Button ml={4} size="xs" variant="ghost">
                       Clear
                     </Button>
                   </PopoverTrigger>
                   <LightMode>
-                    <PopoverContent zIndex={100} bg="white">
+                    <PopoverContent zIndex={100}>
                       <PopoverArrow />
                       <PopoverCloseButton />
                       <PopoverHeader>Are you sure?</PopoverHeader>
@@ -184,8 +290,7 @@ const Header = () => {
                         <Button
                           size="sm"
                           variant="ghost"
-                          colorScheme="red"
-                          rightIcon={<CheckIcon path="" />}
+                          variantColor="red"
                           onClick={() => {
                             dispatch.components.reset()
                             if (onClose) {
@@ -202,13 +307,71 @@ const Header = () => {
               )}
             </Popover>
           </Stack>
+          <LightMode>
+            <Modal isOpen={isOpen} onClose={onClose} size="lg">
+              <ModalOverlay />
+              <ModalContent rounded={10}>
+                <ModalHeader fontSize="15px" textAlign="center">
+                  Add your custom JSON Theme Object
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Input
+                    id="themeFile"
+                    type="file"
+                    accept="application/json"
+                    onChange={(selectorFiles: any) =>
+                      handleChange(selectorFiles)
+                    }
+                  />
+
+                  {fileLoaded && (
+                    <div>
+                      <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                        Your theme has been successfully loaded{' '}
+                        <span
+                          style={{ verticalAlign: 'middle' }}
+                          role="img"
+                          aria-label="light"
+                        >
+                          ✅
+                        </span>
+                      </p>
+                    </div>
+                  )}
+
+                  {fileError && (
+                    <p>
+                      Can't read this file / theme{' '}
+                      <span
+                        style={{ verticalAlign: 'middle' }}
+                        role="img"
+                        aria-label="light"
+                      >
+                        ❌
+                      </span>
+                    </p>
+                  )}
+                  <Box rounded={5}>
+                    <JSONTree data={theme} theme={jsonTheme} />
+                  </Box>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button mr={3} onClick={onClose} size="sm">
+                    Close
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          </LightMode>
         </Flex>
 
         <Stack
           justifyContent="flex-end"
           width="13rem"
           align="center"
-          direction="row"
+          isInline
           spacing="2"
         ></Stack>
       </Flex>

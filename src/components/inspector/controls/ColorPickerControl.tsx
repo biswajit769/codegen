@@ -21,6 +21,7 @@ import HuesPickerControl from './HuesPickerControl'
 import { useForm } from '~hooks/useForm'
 import omit from 'lodash/omit'
 import usePropsSelector from '~hooks/usePropsSelector'
+import useCustomTheme from '~hooks/useCustomTheme'
 
 type ColorPickerPropType = {
   withFullColor?: boolean
@@ -32,7 +33,7 @@ type ColorPickerPropType = {
 }
 
 const ColorPickerControl = (props: ColorPickerPropType) => {
-  const theme = useTheme()
+  const theme = useCustomTheme()
   const themeColors: any = omit(theme.colors, [
     'transparent',
     'current',
